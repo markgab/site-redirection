@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+    <ClientSideComponentInstance
+        Title="SiteRedirection"
+        Location="ClientSideExtension.ApplicationCustomizer"
+        ComponentId="b245aed6-dcef-430a-9a1c-4a38ec00f48e"
+        Properties="{&quot;testMessage&quot;:&quot;Test message&quot;}">
+    </ClientSideComponentInstance>
+</Elements>

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "site-redirection-application-customizer": {
+      "components": [
+        {
+          "entrypoint": "./lib/extensions/siteRedirection/SiteRedirectionApplicationCustomizer.js",
+          "manifest": "./src/extensions/siteRedirection/SiteRedirectionApplicationCustomizer.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "SiteRedirectionApplicationCustomizerStrings": "lib/extensions/siteRedirection/loc/{locale}.js"
+  }
+}
