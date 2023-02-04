@@ -4,7 +4,7 @@
   "https": true,
   "serveConfigurations": {
     "default": {
-      "pageUrl": "https://contoso.sharepoint.com/sites/mySite/SitePages/myPage.aspx",
+      "pageUrl": "https://golgamesh.sharepoint.com/sites/ModernDevPoint/SitePages/Home.aspx",
       "customActions": {
         "b245aed6-dcef-430a-9a1c-4a38ec00f48e": {
           "location": "ClientSideExtension.ApplicationCustomizer",
@@ -15,7 +15,7 @@
       }
     },
     "siteRedirection": {
-      "pageUrl": "https://contoso.sharepoint.com/sites/mySite/SitePages/myPage.aspx",
+      "pageUrl": "https://golgamesh.sharepoint.com/sites/ModernDevPoint/SitePages/Home.aspx",
       "customActions": {
         "b245aed6-dcef-430a-9a1c-4a38ec00f48e": {
           "location": "ClientSideExtension.ApplicationCustomizer",
