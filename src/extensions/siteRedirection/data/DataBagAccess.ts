@@ -24,7 +24,7 @@ export default class DataBagAccess {
             this.context.load(webProperties);
             this.context.executeQueryAsync(
                 getWebPropertiesSucceeded, 
-                this.handleJsomError
+                (s, a) => reject(a)
             );
             
             function getWebPropertiesSucceeded() {
@@ -32,7 +32,10 @@ export default class DataBagAccess {
 
                 const strConfig: string = webProperties.get_fieldValues()[ConfigKey];
 
-                const config: ISiteRedirectionConfig = strConfig ? JSON.parse(strConfig) : DefaultConfig;
+                const config: ISiteRedirectionConfig = {
+                    ...DefaultConfig,
+                    ...JSON.parse(strConfig),
+                };
 
                 resolve(config);
 
@@ -45,12 +48,10 @@ export default class DataBagAccess {
                 } */
             }
 
-        }).catch((msg: string) => {
-            throw new Error(msg);
-        });
+        }).catch(this.handleJsomError);
     }
 
-    saveConfig(config: ISiteRedirectionConfig): Promise<void> {
+    saveConfig(config: ISiteRedirectionConfig): Promise<unknown> {
         return new Promise((resolve, reject) => {
 
             // You can optionally specify the Site URL here to get the context
@@ -68,19 +69,15 @@ export default class DataBagAccess {
 
             // Execute the query to the server.
             this.context.executeQueryAsync(
-                onsuccess,
-                this.handleJsomError
+                () => resolve(null),
+                (s, a) => reject(a)
             );
             
-            function onsuccess() {
-                resolve(null);
-            }
-             
-        });
+        }).catch(this.handleJsomError);
     }
 
-    protected handleJsomError = (sender: any, args: SP.ClientRequestFailedEventArgs) => {
-        const msg = `Data Transaction Failed!\n'${args.get_message()}\n${args.get_stackTrace()}`;
+    protected handleJsomError = (args: SP.ClientRequestFailedEventArgs) => {
+        const msg = `Data Transaction Failed!\n'${args.get_message()}\n${args.get_stackTrace()}`; 
         throw new Error(msg);
     }
 
