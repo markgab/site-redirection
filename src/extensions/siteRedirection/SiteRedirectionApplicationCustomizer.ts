@@ -6,18 +6,7 @@ import {
 import * as strings from 'SiteRedirectionApplicationCustomizerStrings';
 import { render as litRender, html } from 'lit';
 import "./components/SiteRedirection";
-import {
-  provideFluentDesignSystem,
-  fluentDialog,
-  fluentButton
-} from "@fluentui/web-components";
 import DataBagAccess from './data/DataBagAccess';
-
-provideFluentDesignSystem()
-  .register(
-      fluentDialog(),
-      fluentButton(),
-  );
 
 const LOG_SOURCE: string = 'SiteRedirectionApplicationCustomizer';
 
@@ -39,7 +28,7 @@ export default class SiteRedirectionApplicationCustomizer extends BaseApplicatio
 
   public async onInit(): Promise<void> {
 
-    this.data = new DataBagAccess(this.context.pageContext.web.absoluteUrl);
+    await DataBagAccess.loadScripts();
 
     Log.info(LOG_SOURCE, `Initialized ${strings.Title}`);
 
