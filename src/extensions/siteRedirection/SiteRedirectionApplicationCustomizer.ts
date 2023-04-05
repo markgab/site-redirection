@@ -37,12 +37,6 @@ export default class SiteRedirectionApplicationCustomizer extends BaseApplicatio
       message = '(No properties were provided.)';
     }
 
-    /*
-    Dialog.alert(`Hello from ${strings.Title}:\n\n${message}`).catch(() => {
-      //handle error
-    });
-    */
-
     // Wait for the placeholders to be created (or handle them being changed) and then
     // render.
     this.context.placeholderProvider.changedEvent.add(this, this.renderPlaceHolders);

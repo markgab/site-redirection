@@ -1,15 +1,6 @@
-//import { SPHttpClient, SPHttpClientConfiguration, ISPHttpClientOptions } from '@microsoft/sp-http';
 import { SPComponentLoader } from '@microsoft/sp-loader';
-//require('sp-init');
-//require('microsoft-ajax');
-//require('sp-runtime');
-//require('sharepoint');
 
 const ConfigKey = "SiteRedirectionConfig";
-//const Config = SPHttpClient.configurations.v1;
-//const DefaultOptions: ISPHttpClientOptions = {};
-
-
 const DefaultConfig: ISiteRedirectionConfig = Object.freeze({
     enabled: false,
     delay: 5,
@@ -43,24 +34,22 @@ export default class DataBagAccess {
             );
             
             function getWebPropertiesSucceeded() {
-                //var allProps = webProperties.get_fieldValues();
 
-                const strConfig: string = webProperties.get_fieldValues()[ConfigKey]  || '{}';
+                try {
 
-                const config = {
-                    ...DefaultConfig,
-                    ...JSON.parse(strConfig),
-                } as ISiteRedirectionConfig;
+                    const strConfig: string = webProperties.get_fieldValues()[ConfigKey]  || '{}'; 
 
-                resolve(config);
+                    const config = {
+                        ...DefaultConfig,
+                        ...JSON.parse(strConfig),
+                    } as ISiteRedirectionConfig;
 
-            /* 
-                var customProp = "";
-            
-                if(webProperties.get_fieldValues().CustomSite_Version != undefined)
-                {
-                    var customProp = webProperties.get_fieldValues().CustomSite_Version;
-                } */
+                    resolve(config);
+                    
+                } catch(err) {
+                    console.warn('Site redirection failed to restore saved configuration. Using default.');
+                    return DefaultConfig;
+                }
             }
 
         }).catch(this.handleJsomError);
@@ -119,34 +108,6 @@ export default class DataBagAccess {
     }
 }
 
-
-
-/* 
-export default class DataBagAccess {
-    constructor(protected client: SPHttpClient) {
-
-    }
-
-    async fetchConfig(): Promise<ISiteRedirectionConfig> {
-        // https://site.sharepoint.com/_api/web/allProperties
-        const url = '/_api/web/allProperties?$select=' + ConfigKey;
-        const result = await this.get(url);
-        const strConfig: string = result[ConfigKey];
-        return strConfig ? JSON.parse(strConfig) : null;
-    }
-
-    async saveConfig(config: ISiteRedirectionConfig): Promise<any> {
-        // https://techcommunity.microsoft.com/t5/sharepoint/jsom-rest-set-list-item-property-bag-value/m-p/134706
-        // https://learn.microsoft.com/en-us/sharepoint/dev/spfx/web-parts/guidance/connect-to-sharepoint-using-jsom
-    }
-
-    async get(url: string, options = DefaultOptions): Promise<any> {
-        const response = await this.client.get(url, Config, options);
-        const result = await response.json();
-        return result.value;
-    }
-}
- */
 export interface ISiteRedirectionConfig {
 
     /**

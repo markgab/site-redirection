@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+    <Field ID="{9c8dd59c-f096-4818-856c-eda1e61b1d56}"
+        Name="SiteRedirectionPreferences"
+        DisplayName="SiteRedirectionPreferences"
+        Type="Note"
+        Required="FALSE"
+        Group="Site Redirection"
+    >
+        <Default></Default>
+    </Field>
+
+    <ContentType ID="0x0100DA144A062FDA4802957C92b4FDDAA943"
+        Name="Site Redirection Settings"
+        Group="Site Redirection"
+        Description="Financial Content Type"
+    >
+        <FieldRefs>
+            <FieldRef ID="{9c8dd59c-f096-4818-856c-eda1e61b1d56}" />
+        </FieldRefs>
+    </ContentType>
+
+    <ListInstance
+        CustomSchema="schema.xml"
+        FeatureId="00bfea71-de22-43b2-a848-c05709900100"
+        Title="Site Redirection Settings"
+        Description="Settings"
+        TemplateType="100"
+        Url="Lists/SiteRedirection"
+        Hidden="TRUE"
+    >
+        <Data>
+            <Rows>
+                <Row>
+                    <Field Name="Title">Site Redirection Settings</Field>
+                    <Field Name="SiteRedirectionPreferences">
+{
+    "DestinationUrl": "https://...",
+    "Enabled": false,
+    "Delay": 10,
+    "Message": "This site has moved. You will be redirected to the new location soon. Please update your browser bookmarks."
+}
+                    </Field>
+                </Row>
+            </Rows>
+        </Data>
+    </ListInstance>
+
+</Elements>

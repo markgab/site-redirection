@@ -34,7 +34,11 @@
         "assets": {
           "elementManifests": [
             "elements.xml",
-            "ClientSideInstance.xml"
+            "ClientSideInstance.xml",
+            "provision.xml"
+          ],
+          "elementFiles": [
+            "schema.xml"
           ]
         }
       }

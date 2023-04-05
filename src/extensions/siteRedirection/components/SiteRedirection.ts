@@ -27,11 +27,11 @@ export class SiteRedirection extends LitElement {
 
     @state()
     showDialog: boolean = true;
-
-    data: DataBagAccess;
     
     @state()
     config: ISiteRedirectionConfig;
+
+    data: DataBagAccess;
 
     async connectedCallback() {
         super.connectedCallback()
