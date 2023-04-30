@@ -1,5 +1,5 @@
 import { LitElement, html, css } from 'lit';
-import { customElement, property } from 'lit/decorators';
+import { customElement, property, state } from 'lit/decorators.js';
 
 import {
     provideFluentDesignSystem,
@@ -9,7 +9,8 @@ import {
     fluentSwitch,
     fluentTextArea,
 } from "@fluentui/web-components";
-import DataBagAccess, { ISiteRedirectionConfig } from '../data/DataBagAccess';
+import { ISiteRedirectionConfig } from './data/ConfigData';
+import Util from './shared/Util';
   
 provideFluentDesignSystem()
     .register(
@@ -23,40 +24,40 @@ provideFluentDesignSystem()
 @customElement('sr-settings')
 export class Settings extends LitElement {
 
-    @property({attribute: false})
+    @property()
+    reload: () => void = () => {};
+
+    @state()
     config: ISiteRedirectionConfig = <any>{};
 
-    @property({attribute: false})
-    data: DataBagAccess;
-
-    render() {
+    override render() {
         return html`
             <div class="sr-settings">
                 <h3>Site Redirection Settings</h3>
-
+                <h4>HELLO WORLD 11</h4>
                 <div class="form-grid">
-                    <fluent-switch checked=${this.config.enabled} @change=${e => this.onChange('enabled', e.target.checked)}>
+                    <fluent-switch checked=${this.config.Enabled} @change=${e => this.onChange('Enabled', e.target.checked)}>
                         <span slot="checked-message">On</span>
                         <span slot="unchecked-message">Off</span>
                         <label for="cap-switch">Enable Site Redirection</label>
                     </fluent-switch>
-                    <fluent-number-field 
-                        min="0"
-                        value=${this.config.delay}
-                        appearace="outline" 
-                        placeholder="Time in Seconds"
-                        @input=${e => this.onChange('delay', e.target.valueAsNumber)}
-                    >Delay Before Redirection</fluent-number-field>
                     <fluent-text-field
-                        value=${this.config.destinationUrl}
+                        value=${this.config.DestinationUrl}
                         appearance="outline" 
                         placeholder="/sites/site/web" 
                         spellcheck="false"
-                        @input=${e => this.onChange('destinationUrl', e.target.value)}
+                        @input=${e => this.onChange('DestinationUrl', e.target.value)}
                     >Redirect Destination</fluent-text-field>
+                    <fluent-number-field 
+                        min="0"
+                        value=${this.config.Delay}
+                        appearace="outline" 
+                        placeholder="Time in Seconds"
+                        @input=${e => this.onChange('Delay', e.target?.valueAsNumber)}
+                    >Delay Before Redirection</fluent-number-field>
                     <fluent-text-area 
-                        value=${this.config.message} 
-                        @input=${e => this.onChange('message', e.target.value)}
+                        value=${this.config.Message} 
+                        @input=${e => this.onChange('Message', e.target.value)}
                     >Redirection Message</fluent-text-area>
                 </div>
                 <fluent-button @click=${() => this.onSave()}>Save</fluent-button>
@@ -65,34 +66,43 @@ export class Settings extends LitElement {
         `;
     }
 
+    override async connectedCallback() {
+        super.connectedCallback()
+
+        try {
+
+            this.config = await Util.data.fetchConfig();
+
+        } catch(err) {
+            //console.error(err.message);
+        }
+    }
+
+    async onSave() {
+        await Util.data.updateConfig(this.config);
+        this.dispatchEvent(new CustomEvent('save'));   
+    }
+
     onChange(fieldName: string, val: any) {
         console.log('change', val);
         const newConfig = {
             ...this.config
         };
-        newConfig[fieldName] = val;
+        (newConfig as any)[fieldName] = val;
 
         this.config = newConfig;
     }
 
-    async onSave() {
-        try {
-            await this.data.saveConfig(this.config);
-        } catch(err) {
-            alert(JSON.stringify(err))
-        }
-    }
-
-    static styles = css`
+    static override styles = css`
         .sr-settings {
 
         }
 
         .form-grid {
             display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            justify-content: space-evenly;
+            flex-direction: column;
+            //flex-wrap: wrap;
+            justify-content: flex-start;
             //flex-basis: 50%;
         }
 

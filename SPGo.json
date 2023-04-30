@@ -1,0 +1,14 @@
+{
+    "sourceDirectory": "classic-scriptlink/src",
+    "sharePointSiteUrl": "https://golgamesh.sharepoint.com/sites/ModernDevPoint",
+    "remoteFolders": [
+        "/siteAssets/Site-Redirection/*"
+    ],
+    "publishingScope": "SaveOnly",
+    "authenticationType": "Digest",
+    "publishWorkspaceOptions": {
+        "destinationFolder" : "/SiteAssets/Site-Redirection",
+        "globPattern" : "*.*",
+        "localRoot" : "classic-scriptlink/dist"
+    }
+}

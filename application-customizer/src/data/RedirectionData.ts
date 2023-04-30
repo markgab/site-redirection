@@ -22,13 +22,15 @@ export default class RedirectionData {
     }
 
     public async fetchConfig(): Promise<ISiteRedirectionConfig> {
-        const url = `${this.getListItemsApiPath()}$top=1&$orderby=ID desc`;
-        const response = await this.spClient.fetch(url, Config, DefaultOptions);
-        const result: ISiteRedirectionRow = await response.json();
+        const url = `${this.getListItemsApiPath()}?$top=1&$orderby=ID desc`;
+        const result = <ISiteRedirectionRow[]> await this.fetch(url);
+        const match = first(result);
+        const config = <ISiteRedirectionConfig>JSON.parse(match.SiteRedirectionPreferences);
+        config.Id = match.Id;
         try {
             return {
                 ...DefaultRedirectionConfig,
-                ...JSON.parse(result.SiteRedirectionPreferences || '{}')
+                ...config,
             };
         } catch(err) {
             return {
@@ -39,11 +41,28 @@ export default class RedirectionData {
 
     public updateConfig(config: ISiteRedirectionConfig): Promise<any> {
         const url = `${this.getListItemsApiPath()}(${config.Id})`;
-        const options = this.getOptions();
-        options.method = "PATCH";
-        options.body = JSON.stringify(config);
-        return this.spClient.post(url, Config, options);
+        const row = this.transformConfig(config);
+        return this.merge(url, row);
     }
+
+    private transformConfig(config: ISiteRedirectionConfig): ISiteRedirectionRow {
+        const clean = {
+            ...config,
+        };
+        delete clean.Id;
+
+        const row = {};
+        //this.appendMetadata(row);
+
+        row['SiteRedirectionPreferences'] = JSON.stringify(clean);
+        return row;
+    }
+/* 
+    private appendMetadata(data: Object) {
+        data['__metadata'] = {
+            "type": "SP.Data.SiteRedirectionListItem"
+        };
+    } */
 
     private getOptions(): ISPHttpClientOptions {
         return {
@@ -54,15 +73,38 @@ export default class RedirectionData {
     private getListItemsApiPath(): string {
         return [
             this.absoluteWebUrl, 
-            `api/web/lists/getByTitle(${ListTitle.Settings})/items?`
+            `_api/web/lists/getByTitle('${ListTitle.Settings}')/items`
         ].join('/');
+    }
+
+    private async fetch(url, options = this.getOptions()): Promise<unknown> {
+        const response = await this.spClient.fetch(url, Config, options);
+        const result = await response.json();
+        return result.value;
+    }
+
+    private async merge(url, body: any, options = this.getOptions()): Promise<void> {
+        options.method = "MERGE";
+        options.body = JSON.stringify(body);
+        options.headers = {
+            'X-HTTP-Method': 'MERGE',
+            'IF-MATCH': '*'
+        };
+        await this.spClient.post(url, Config, options);
     }
 }
 
+function first<T>(items: T[]): T {
+    if(!items || !items.length) {
+        return null;
+    }
+    return items[0];
+}
+
 export interface ISiteRedirectionRow {
-    Id: number;
-    Title: string;
-    SiteRedirectionPreferences: string;
+    Id?: number;
+    Title?: string;
+    SiteRedirectionPreferences?: string;
 }
 
 export interface ISiteRedirectionConfig {

@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+      "outDir": "./dist/",
+      "sourceMap": true,
+      "noImplicitAny": false,
+      "module": "ESNext",
+      "target": "es2015",
+      "jsx": "react",
+      "allowJs": true,
+      "skipDefaultLibCheck": true,
+      "moduleResolution": "node",
+      "experimentalDecorators": true,
+      "lib": [
+        "es2015",
+        "es6",
+        "es5",
+        "dom"
+      ],
+      "plugins": [
+        {
+          "name": "typescript-lit-html-plugin"
+        }
+      ],
+    }
+  }

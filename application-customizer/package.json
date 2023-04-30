@@ -18,7 +18,9 @@
     "@microsoft/sp-application-base": "1.16.1",
     "@microsoft/sp-core-library": "1.16.1",
     "@microsoft/sp-dialog": "1.16.1",
-    "lit": "^2.6.1",
+    "@pnp/graph": "^3.13.0",
+    "@pnp/sp": "^3.13.0",
+    "lit": "^2.7.2",
     "tslib": "2.3.1"
   },
   "devDependencies": {

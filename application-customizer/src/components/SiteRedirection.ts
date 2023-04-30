@@ -1,6 +1,6 @@
 import { LitElement, html, CSSResultGroup, css } from 'lit';
-import { customElement, state } from 'lit/decorators';
-import DataBagAccess, { ISiteRedirectionConfig } from '../data/DataBagAccess';
+import { customElement, property, state } from 'lit/decorators.js';
+import { ISiteRedirectionConfig } from '../data/RedirectionData';
 import "./Settings";
 
 import {
@@ -9,21 +9,24 @@ import {
     fluentButton,  
     fluentTextField,
   } from "@fluentui/web-components";
+import Util from '../shared/Util';
+import ConfigData from '../data/ConfigData';
   
-  provideFluentDesignSystem()
+provideFluentDesignSystem()
     .register(
         fluentDialog(),
         fluentButton(),
         fluentTextField(),
-    );
-
+);
 
 @customElement('site-redirection')
 export class SiteRedirection extends LitElement {
     constructor() {
         super();
-        this.data = new DataBagAccess('https://golgamesh.sharepoint.com/sites/ModernDevPoint');
     }
+
+    @property({type: String})
+    absoluteWebUrl: string;
 
     @state()
     showDialog: boolean = true;
@@ -31,20 +34,38 @@ export class SiteRedirection extends LitElement {
     @state()
     config: ISiteRedirectionConfig;
 
-    data: DataBagAccess;
-
     async connectedCallback() {
         super.connectedCallback()
 
         try {
 
-            this.config = await this.data.fetchConfig();
-            console.log(JSON.stringify(this.config, null, 2));
+            await this.setup();
+            this.getRootNode().addEventListener('site-redirection-settings', this.onRequestConfig);
 
         } catch(err) {
-            alert(err.message);
+            throw err;
         }
 
+    }
+
+    disconnectedCallback(): void {
+        this.getRootNode().removeEventListener('site-redirection-settings', this.onRequestConfig);
+    }
+
+    onRequestConfig = () => {
+        this.showDialog = true;
+    }
+
+    async setup() {
+
+        const data = new ConfigData(this.absoluteWebUrl);
+        this.config = await Util.data.fetchConfig();
+        Util.setup(data);
+
+    }
+
+    onSave() {
+        this.showDialog = false;
     }
 
     render() {
@@ -55,7 +76,7 @@ export class SiteRedirection extends LitElement {
                 </div>
                 <fluent-dialog id="defaultDialog" .hidden=${!this.showDialog} trap-focus modal>
                     <div style="margin: 20px;">
-                        <sr-settings .config=${this.config} .data=${this.data}></sr-settings>
+                        <sr-settings @save=${this.onSave} .reload=${() => this.setup()}></sr-settings>
                         <fluent-button @click=${e => this.showDialog = false } id="dialogCloser" appearance="accent" tabindex="0">Dismiss</fluent-button>
                     </div>
                 </fluent-dialog>

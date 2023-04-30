@@ -1,12 +1,13 @@
 import { Log } from '@microsoft/sp-core-library';
 import {
-  BaseApplicationCustomizer, PlaceholderContent, PlaceholderName
+  BaseApplicationCustomizer, 
+  PlaceholderContent, 
+  PlaceholderName,
 } from '@microsoft/sp-application-base';
 //import { Dialog } from '@microsoft/sp-dialog';
 import * as strings from 'SiteRedirectionApplicationCustomizerStrings';
 import { render as litRender, html } from 'lit';
-import "./components/SiteRedirection";
-import DataBagAccess from './data/DataBagAccess';
+import "../../../../redirection/dist/site-redirection-web-component.js";
 
 const LOG_SOURCE: string = 'SiteRedirectionApplicationCustomizer';
 
@@ -24,12 +25,9 @@ export interface ISiteRedirectionApplicationCustomizerProperties {
 export default class SiteRedirectionApplicationCustomizer extends BaseApplicationCustomizer<ISiteRedirectionApplicationCustomizerProperties> {
 
   bottomPlaceholder: PlaceholderContent;
-  data: DataBagAccess;
 
   public async onInit(): Promise<void> {
-
-    await DataBagAccess.loadScripts();
-
+    
     Log.info(LOG_SOURCE, `Initialized ${strings.Title}`);
 
     let message: string = this.properties.testMessage;
@@ -58,11 +56,13 @@ export default class SiteRedirectionApplicationCustomizer extends BaseApplicatio
         return;
       }
 
-      this.bottomPlaceholder.domElement &&
+      const { absoluteUrl } = this.context.pageContext.web;
 
+      this.bottomPlaceholder.domElement &&
       litRender(html`
-        <site-redirection></site-redirection>
+        <site-redirection absoluteWebUrl=${absoluteUrl}></site-redirection>
       `, this.bottomPlaceholder.domElement);
+      
       
     }
   }

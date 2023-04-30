@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+    <Module Name="Files" Url="SiteAssets/Site-Redirection">
+        <File Path="site-redirection-classic-scriptlink.js" Url="site-redirection-classic-scriptlink.js" Type="GhostableInLibrary" ReplaceContent="TRUE"></File>
+    </Module>
+</Elements>

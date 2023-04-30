@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Elements xmlns="http://schemas.microsoft.com/sharepoint/">
+    <CustomAction
+        Title="SiteRedirection"
+        Location="ClientSideExtension.ApplicationCustomizer"
+        ClientSideComponentId="b245aed6-dcef-430a-9a1c-4a38ec00f48e"
+        ClientSideComponentProperties="{&quot;testMessage&quot;:&quot;Test message&quot;}">
+    </CustomAction>
+<!-- 
+    Might work    
+    <CustomAction 
+        Name="ClassicSiteRedirection" 
+        Title="Classic SiteRedirection"
+        Description="Loads site redirection for classic pages"
+        Location="ScriptLink" 
+        Sequence="100"
+        ScriptSrc="~Site/SiteAssets/Site-Redirection/site-redirection-classic-scriptlink.js">
+    </CustomAction> -->
+
+
+    <!-- ~SiteCollection -->
+<!--     <CustomAction
+        Location = "Microsoft.SharePoint.StandardMenu"
+        GroupId = "SiteActions"
+        Rights = "ManageWeb"
+        Title = "Site Redirection"
+        Sequence = "100"
+    > -->
+
+    <!--
+
+        {
+            "__metadata": {
+                "type": "SP.UserCustomAction"
+            },
+            "Location": "Microsoft.SharePoint.StandardMenu",
+            "Group": "SiteActions",
+            "Title": "Site Redirection",
+            "Name": "Site Redirection Name",
+            "Url": "javascript:alert('Site Redirection');",
+            "Sequence": 100
+        }
+
+
+
+        {
+            "__metadata": {
+                "type": "SP.UserCustomAction"
+            },
+            "Location": "Microsoft.SharePoint.SiteSettings",
+            "Group": "SiteAdministration",
+            "Title": "Site Redirection",
+            "Name": "Site Redirection Name",
+            "Url": "javascript:const e = new CustomEvent('site-redirection-settings', { detail: {}, bubbles: true, cancelable: true, composed: false });')",
+            "Sequence": 100
+        }
+
+        {
+            "__metadata": {
+                "type": "SP.UserCustomAction"
+            },
+            "Location": "Microsoft.SharePoint.StandardMenu",
+            "Group": "SiteActions",
+            "Title": "Site Redirection 2",
+            "Name": "Site Redirection Name",
+            "Url": "https://golgamesh.sharepoint.com",
+            "Sequence": 100
+        }
+     -->
+<!-- 
+     {
+        "Location": "ScriptLink",
+        "Id": "ClassicSiteRedirection", 
+        "Sequence": 100,
+        "ScriptSrc": "~Site/SiteAssets/Site-Redirection/site-redirection-classic-scriptlink.js"
+     }
+ -->
+    
+<!--     
+        GroupId = "SiteActions" -->
+    <!-- javascript:alert('custom action')-->
+    <!--     
+        RequiredAdmin = "Delegated | Farm | Machine"
+        ControlAssembly = "Text"
+        ControlClass = "Text"
+        ControlSrc = "Text"
+        Description = "Text"
+        FeatureId = "Text"
+        ImageUrl = "Text"
+        RegistrationId = "Text"
+        RegistrationType = "Text"
+        RequireSiteAdministrator = "TRUE" | "FALSE"
+        RootWebOnly = "TRUE" | "FALSE"
+        ScriptSrc = "Text"
+        ScriptBlock = "Text"
+        Sequence = "Integer"
+        ShowInLists = "TRUE" | "FALSE"
+        ShowInReadOnlyContentTypes = "TRUE" | "FALSE"
+        ShowInSealedContentTypes = "TRUE" | "FALSE"
+        UIVersion = "Integer" -->
+    <!-- </CustomAction> -->
+</Elements>
