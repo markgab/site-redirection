@@ -3,7 +3,7 @@
   "solution": {
     "name": "sp-site-redirection-client-side-solution",
     "id": "23a952aa-f9b2-49c2-bc7b-cea1395882f5",
-    "version": "1.0.0.9",
+    "version": "1.0.0.10",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,

@@ -6,16 +6,37 @@
         ClientSideComponentId="b245aed6-dcef-430a-9a1c-4a38ec00f48e"
         ClientSideComponentProperties="{&quot;testMessage&quot;:&quot;Test message&quot;}">
     </CustomAction>
+
+<!--     
+    <CustomAction Id="CA_MigrationBannerSettings"
+                  GroupId="SiteAdministration"
+                  Location="Microsoft.SharePoint.SiteSettings"
+                  Description="Settings for Migration Banner"
+                  Sequence="1000"
+                  Title="Migration Banner Settings">
+      <UrlAction Url="~site/migration/BannerSettings.aspx" />
+    </CustomAction> -->
 <!-- 
-    Might work    
-    <CustomAction 
-        Name="ClassicSiteRedirection" 
-        Title="Classic SiteRedirection"
+    <CustomAction
+        Title="SiteRedirectionSettingsLink"
+        Location="Microsoft.SharePoint.SiteSettings"
+        GroupId="SiteAdministration"
+        Sequence="1000"
+        Url="javascript:document.querySelector('site-redirection').dispatchEvent(new CustomEvent('site-redirection-settings', { detail: {}, bubbles: true, cancelable: true, composed: false }));">
+    </CustomAction> -->
+ 
+<!--     <CustomAction 
+        Id="ClassicSiteRedirection"
+        Title="ClassicSiteRedirection"
         Description="Loads site redirection for classic pages"
         Location="ScriptLink" 
-        Sequence="100"
-        ScriptSrc="~Site/SiteAssets/Site-Redirection/site-redirection-classic-scriptlink.js">
-    </CustomAction> -->
+        Sequence="200"
+        ScriptSrc="/SiteAssets/Site-Redirection/site-redirection-classic-scriptlink.js"
+    ></CustomAction> -->
+<!-- 
+        ScriptSrc="~Site/SiteAssets/Site-Redirection/site-redirection-classic-scriptlink.js" -->
+<!-- 
+    Might work    -->
 
 
     <!-- ~SiteCollection -->

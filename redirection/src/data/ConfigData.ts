@@ -1,9 +1,15 @@
 import { SPBrowser } from "@pnp/sp";
 import { IWeb, IWebInfo, Web } from "@pnp/sp/webs";
 import { IList } from "@pnp/sp/lists";
+import { 
+    IUserCustomActionAddResult, 
+    IUserCustomActionInfo 
+} from "@pnp/sp/user-custom-actions";
+import { PermissionKind } from "@pnp/sp/security";
 import "@pnp/sp/webs";
 import "@pnp/sp/lists";
 import "@pnp/sp/items";
+import "@pnp/sp/user-custom-actions";
 
 export interface ISiteRedirectionRow {
     Id?: number;
@@ -82,7 +88,6 @@ export default class ConfigData {
                 ...DefaultRedirectionConfig,
             };
         }
-        
     }
 
     public updateConfig(config: ISiteRedirectionConfig): Promise<any> {
@@ -103,7 +108,6 @@ export default class ConfigData {
         delete clean.Id;
 
         const row = {};
-        //this.appendMetadata(row);
 
         row['SiteRedirectionPreferences'] = JSON.stringify(clean);
         return row;
@@ -118,6 +122,56 @@ export default class ConfigData {
             return null;
         });
     }
+
+    isUserOwnerOrAdmin(): Promise<boolean> {    
+        return this.web.currentUserHasPermissions(PermissionKind.ManageWeb);
+    }
+
+    //#region Classic ScriptLink
+
+    readonly RedirectionCustomActionName = "ClassicSiteRedirection";
+
+    async fetchRedirectionScriptLink(): Promise<IUserCustomActionInfo> {
+        const filter = `Title eq ${this.RedirectionCustomActionName}`;
+        const actions = await this
+            .web
+            .userCustomActions
+            .filter(filter)();
+        
+        return first(actions);
+    }
+
+    createRedirectionScriptLink(): Promise<IUserCustomActionAddResult> {
+        return this.web.userCustomActions.add({
+            Title: this.RedirectionCustomActionName, 
+            Sequence: 100,
+            Location: "ScriptLink",
+            ScriptSrc: "~Site/SiteAssets/Site-Redirection/site-redirection-classic-scriptlink.js"
+        });
+    }
+
+    async deleteRedirectionScriptLink(): Promise<void> {
+        const scriptLink = await this.fetchRedirectionScriptLink();
+        if(!scriptLink) {
+            return;
+        }
+        return this.web.userCustomActions.getById(scriptLink.Id).delete();
+    }
+
+    async syncClassicRedirectionToConfig(config: ISiteRedirectionConfig): Promise<any> {
+        const isUserOwnerOrAdmin = await this.isUserOwnerOrAdmin();
+        if(!isUserOwnerOrAdmin) {
+            return;
+        }
+        const scriptLink = await this.fetchRedirectionScriptLink();
+        if(config.Enabled && !scriptLink) {
+            await this.createRedirectionScriptLink();
+        } else if(!config.Enabled && scriptLink) {
+            await this.deleteRedirectionScriptLink();
+        }
+    }
+
+    //#endregion Classic ScriptLink
 }
 
 function first<T>(items: T[]): T {

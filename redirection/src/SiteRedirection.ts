@@ -1,16 +1,14 @@
 import { LitElement, html, CSSResultGroup, css } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { ISiteRedirectionConfig } from './data/ConfigData';
+import ConfigData, { ISiteRedirectionConfig } from './data/ConfigData';
+import Util from './shared/Util';
 import "./Settings";
-
 import {
     provideFluentDesignSystem,
     fluentDialog,
     fluentButton,  
     fluentTextField,
-  } from "@fluentui/web-components";
-import Util from './shared/Util';
-import ConfigData from './data/ConfigData';
+} from "@fluentui/web-components";
   
 provideFluentDesignSystem()
     .register(
@@ -21,15 +19,12 @@ provideFluentDesignSystem()
 
 @customElement('site-redirection')
 export class SiteRedirection extends LitElement {
-    constructor() {
-        super();
-    }
 
     @property({type: String})
     absoluteWebUrl: string = "";
 
     @state()
-    showDialog: boolean = true;
+    showDialog: boolean = false;
     
     @state()
     config: ISiteRedirectionConfig = {} as any;
@@ -60,7 +55,8 @@ export class SiteRedirection extends LitElement {
     async setup() {
 
         const data = new ConfigData(this.absoluteWebUrl);
-        Util.setup(data);
+        const isUserOwnerOrAdmin = await data.isUserOwnerOrAdmin();
+        Util.setup(data, isUserOwnerOrAdmin);
         this.config = await data.fetchConfig();
 
     }
@@ -70,6 +66,20 @@ export class SiteRedirection extends LitElement {
     }
 
     override render() {
+        const { Enabled } = this.config;
+        const { isUserOwnerOrAdmin } = Util;
+        switch(true) {
+            case !Enabled && isUserOwnerOrAdmin:
+                return this.renderMinimized();
+            case Enabled:
+                return this.renderBanner();
+            default:
+                return this.renderInvisible();
+        }
+    }
+
+    renderMinimized() {
+
         return html`
             <div class="sr-anchor">
                 <div class="sr-floating">
@@ -83,6 +93,14 @@ export class SiteRedirection extends LitElement {
                 </fluent-dialog>
             </div>
         `;
+    }
+
+    renderInvisible() {
+
+    }
+
+    renderBanner() {
+
     }
 /* 
     onShowDialogClick = () => {
